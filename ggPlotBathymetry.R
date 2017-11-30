@@ -1,4 +1,5 @@
 library("marmap")
+library("mapdata")
 library("ggplot2")
 get.bathymetry <- function(lon1=4, lon2=30, lat1=53, lat2=67, bathy.breaks = 8){
     bathymetry <- getNOAA.bathy(lon1=lon1, lon2=lon2, lat1=lat1, lat2=lat2, resolution=1, keep=TRUE) # keep = TRUE saves downloaded data as csv-File

@@ -1,5 +1,5 @@
 ---
-title: "Bathymetry Mapping with R"
+title: "Bathymetry mapping with ggplot in R"
 author: "Marko Lipka"
 output: 
   html_document: 
@@ -40,7 +40,6 @@ The *mapdata* package allows to download world coastline polygon data. Unfortuna
 Haven't found a workaround for that yet...
 
 ```{r getCoastlines}
-library("mapdata")
 baltic.coastlines <- map_data('worldHires', xlim = c(4, 29), ylim = c(50, 66))
 
 ggplot(baltic.coastlines) +
