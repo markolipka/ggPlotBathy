@@ -67,26 +67,28 @@ ggplot(baltic.coastlines) +
 ### Plot some maps
 
 ```{r plotFunction}
- land.colour   <- NA
- border.colour <- "red"
+ 
 
-plot.map <- function(bathy = baltic.bathy, basemap = baltic.coastlines, xmin = 5, xmax = 30, ymin = 53.5, ymax = 66){
+plot.map <- function(lon.min = 4, lon.max = 30,
+                     lat.min = 53, lat.max = 67,
+                     bathy.breaks = c(seq(0, 50, length.out = 6),
+                                                  seq(100, 300, length.out = 3),
+                                                  +Inf),
+                     land.colour = NA, border.colour = "darkgrey"){
+    bathy <- get.bathymetry(lon1 = lon.min, lon2 = lon.max, 
+                                 lat1 = lat.min, lat2 = lat.max,
+                                 bathy.breaks = bathy.breaks)
+    coastlines <- map_data('worldHires', xlim = c(lon.min, lon.max), ylim = c(lat.min, lat.max))
+    
     ggplot() +
     coord_quickmap(#projection= "azequalarea",
-      xlim=c(xmin, xmax), ylim=c(ymin, ymax)) +
+      xlim=c(lon.min, lon.max), ylim=c(lat.min, lat.max)) +
     geom_tile(data = bathy, aes(x=Longitude, y=Latitude, fill=Depthsteps_m)) +
     scale_fill_brewer(palette = "Blues", name = "Water depth [m]") +
-    geom_polygon(data=basemap, aes(x=long, y=lat, group=group), fill=land.colour, colour = border.colour, lwd=.5) +
+    geom_polygon(data=coastlines, aes(x=long, y=lat, group=group),
+                 fill=land.colour, colour = border.colour, lwd=.5) +
+        scale_y_continuous(expand = c(0,0)) + scale_x_continuous(expand = c(0,0)) + # so that the whole plot area is filled with bathy and coastlines.
     theme_minimal()
-
-# plot.map <- function(bathy = baltic.bathy, basemap = baltic.coastlines, xmin = 5, xmax = 30, ymin = 53.5, ymax = 66){
-#     ggmap() +#satmap) +
-#     coord_quickmap(#projection= "azequalarea",
-#       xlim=c(xmin, xmax), ylim=c(ymin, ymax)) +
-#     geom_tile(data = bathy, aes(x=Longitude, y=Latitude, fill=Depthsteps_m)) +
-#     scale_fill_brewer(palette = "Blues", name = "Water depth [m]") +
-#         geom_polygon(data=basemap, aes(x=long, y=lat, group=group), fill=land.colour, colour = border.colour, lwd=.5) +
-#     theme_minimal()
 }
 ```
 
@@ -101,17 +103,15 @@ plot.map()
 ... with the bathymetry depth range of the whole Baltic Sea ...
 
 ```{r Map_SouthernBalticSea}
-plot.map(xmin = 10, xmax = 20, ymin = 54, ymax = 58)
+plot.map(lon.min = 4, lon.max = 30,
+         lat.min = 53, lat.max = 67) +
+    coord_quickmap(xlim = c(10, 20), ylim = c(54, 58))
 ```
 
 ... or adapted to plot region.
 
 ```{r Map_SouthernBalticSea_ownDepRange}
-southern.baltic.bathy   <- get.bathymetry(lon1 = 10, lon2 = 20, 
-                                 lat1 = 54, lat2 = 58,
-                                 bathy.breaks = c(seq(0, 50, length.out = 6),
-                                                  +Inf))
-plot.map(bathy = southern.baltic.bathy, xmin = 10, xmax = 20, ymin = 54, ymax = 58)
+plot.map(lon.min = 10, lon.max = 20, lat.min = 54, lat.max = 58)
 ```
 
 #### Should also work for any other region in the world
@@ -120,10 +120,9 @@ plot.map(bathy = southern.baltic.bathy, xmin = 10, xmax = 20, ymin = 54, ymax = 
 long <- 110
 lat <- 5
 
-region.bathy <- get.bathymetry(lon1 = long, lon2 = long + 40, lat1 = lat, lat2 = lat + 15,
-                               bathy.breaks = c(0, 1000, 2000, 3000, 4000, 5000, 7000, 9000, Inf))
-region.coastlines <- map_data('worldHires', xlim = c(long, long +40), ylim = c(lat, lat + 15))
-plot.map(bathy = region.bathy, basemap = region.coastlines, xmin = long, xmax = long +40, ymin = lat, ymax = lat + 15)
+plot.map(lon.min = long, lon.max = long +40, lat.min = lat, lat.max = lat + 15, 
+         bathy.breaks = c(0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, +Inf),
+         land.colour = "grey20", border.colour = "pink")
 ```
 
 Viola! Have fun ...
@@ -133,8 +132,6 @@ Viola! Have fun ...
 * map_data even with *map = 'worldHires'* does not include all islands:
   + is there another source for high resolution coastlines of the world?
   + is the coastline necessary ?
-* map generation should be transferred into a function, so that coordinates only have to be set once. The margins for bathymetry and coastline 
-basemap must be slightly larger than the actual plot margins. Otherwise the map is not completely filled out with bathy-data (see last 2 plots).
 * would be nice to have some options for the colour scale of bathymetry
     + continuous vs. discrete
     + colour gradient selection
