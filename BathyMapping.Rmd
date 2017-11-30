@@ -26,7 +26,9 @@ get.bathymetry <- function(lon1=4, lon2=30, lat1=53, lat2=67, bathy.breaks = 8){
   fortyfied.bathy <- subset(fortyfied.bathy, z <= 0) # limit to values below sea surface
   fortyfied.bathy$z <- -fortyfied.bathy$z # make depths positive values
   names(fortyfied.bathy) <- c("Longitude", "Latitude", "Depth_m")
-  fortyfied.bathy$Depthsteps_m <- cut(fortyfied.bathy$Depth_m, breaks = bathy.breaks, dig.lab = 4) # generate depth intervals for contour plot
+  fortyfied.bathy$Depthsteps_m <- cut(fortyfied.bathy$Depth_m,
+                                      breaks = bathy.breaks,
+                                      dig.lab = 100) # generate depth intervals for contour plot
   ## 'cut()' returns intervals in unpleasant format. Thus, cumbersome renaming for nice legend:
   fortyfied.bathy <- subset(fortyfied.bathy, !is.na(fortyfied.bathy$Depthsteps_m))
     levels(fortyfied.bathy$Depthsteps_m) <- sub(",", " - ", levels(fortyfied.bathy$Depthsteps_m))
@@ -60,7 +62,7 @@ library("mapdata")
 baltic.coastlines <- map_data('worldHires', xlim = c(4, 29), ylim = c(50, 66))
 
 ggplot(baltic.coastlines) +
-  geom_polygon(aes(x=long, y=lat, group=group), colour = "white")
+  geom_polygon(aes(x=long, y=lat, group=group), colour = "red", fill = NA)
 ```
 
 
@@ -74,7 +76,7 @@ plot.map <- function(lon.min = 4, lon.max = 30,
                      bathy.breaks = c(seq(0, 50, length.out = 6),
                                                   seq(100, 300, length.out = 3),
                                                   +Inf),
-                     land.colour = NA, border.colour = "darkgrey"){
+                     land.colour = NA, border.colour = "black"){
     bathy <- get.bathymetry(lon1 = lon.min, lon2 = lon.max, 
                                  lat1 = lat.min, lat2 = lat.max,
                                  bathy.breaks = bathy.breaks)
@@ -86,7 +88,7 @@ plot.map <- function(lon.min = 4, lon.max = 30,
     geom_tile(data = bathy, aes(x=Longitude, y=Latitude, fill=Depthsteps_m)) +
     scale_fill_brewer(palette = "Blues", name = "Water depth [m]") +
     geom_polygon(data=coastlines, aes(x=long, y=lat, group=group),
-                 fill=land.colour, colour = border.colour, lwd=.5) +
+                 fill=land.colour, colour = border.colour, lwd=.2) +
         scale_y_continuous(expand = c(0,0)) + scale_x_continuous(expand = c(0,0)) + # so that the whole plot area is filled with bathy and coastlines.
     theme_minimal()
 }
@@ -130,8 +132,8 @@ Viola! Have fun ...
 ## Known issues / \#TODO:
 
 * map_data even with *map = 'worldHires'* does not include all islands:
-  + is there another source for high resolution coastlines of the world?
-  + is the coastline necessary ?
+    + is there another source for high resolution coastlines of the world?
+    + is the coastline necessary ?
 * would be nice to have some options for the colour scale of bathymetry
     + continuous vs. discrete
     + colour gradient selection
