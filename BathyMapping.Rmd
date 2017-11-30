@@ -50,6 +50,8 @@ ggplot(baltic.coastlines) +
 
 ### Plot some maps
 
+... combine plot of bathymetry and coastlines in one function *plot.bathymetry()*
+
 #### The whole Baltic Sea:
 
 ```{r Map_BalticSea}
