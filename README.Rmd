@@ -2,10 +2,9 @@
 title: "Bathymetry mapping with ggplot in R"
 author: "Marko Lipka"
 output: 
-  html_document: 
+  pdf_document: 
     fig_height: 10
     fig_width: 12
-    theme: spacelab
 ---
 
 ```{r setup, include=FALSE}
