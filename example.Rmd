@@ -3,6 +3,7 @@ title: "Bathymetry mapping with ggplot in R"
 author: "Marko Lipka"
 output: 
   pdf_document: 
+    dev: png
     fig_height: 10
     fig_width: 12
 ---
