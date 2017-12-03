@@ -9,7 +9,7 @@ get.bathymetry <- function(lon1=4, lon2=30, lat1=53, lat2=67, bathy.breaks = 8){
     names(fortyfied.bathy) <- c("Longitude", "Latitude", "Depth_m")
     fortyfied.bathy$Depthsteps_m <- cut(fortyfied.bathy$Depth_m,
                                         breaks = bathy.breaks,
-                                        dig.lab = 100) # generate depth intervals for contour plot
+                                        dig.lab = 10) # generate depth intervals for contour plot
     ## 'cut()' returns intervals in unpleasant format. Thus, cumbersome renaming for nice legend:
     fortyfied.bathy <- subset(fortyfied.bathy, !is.na(fortyfied.bathy$Depthsteps_m))
     levels(fortyfied.bathy$Depthsteps_m) <- sub(",", " - ", levels(fortyfied.bathy$Depthsteps_m))
