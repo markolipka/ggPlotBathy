@@ -4,8 +4,6 @@ author: "Marko Lipka"
 output: 
   pdf_document: 
     dev: png
-    fig_height: 10
-    fig_width: 12
 ---
 
 ```{r setup, include=FALSE}
@@ -13,78 +11,87 @@ library(knitr)
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, error = FALSE)
 ```
 
-### Get bathymetry data
+### Intro
 
-The *marmap* package provides world wide high resolution bathymetry data.
 
 ```{r getBathymetryData}
 source("ggPlotBathymetry.R")
 ```
 
-```{r}
-baltic.bathy   <- get.bathymetry(lon1 = 4, lon2 = 30, 
-                                 lat1 = 53, lat2 = 67,
-                                 bathy.breaks = c(seq(0, 50, length.out = 6),
-                                                  seq(100, 300, length.out = 3),
-                                                  +Inf))
+The  provides world wide high resolution bathymetry data.
 
-ggplot(baltic.bathy) + 
-    geom_tile(aes(x=Longitude, y=Latitude, fill=Depthsteps_m)) +
-    scale_fill_brewer(palette = "Blues", name = "Water depth [m]") 
-```
+The  allows to download world coastline polygon data. 
+
+*plot.bathymetry()* fetches bathymetry data (*marmap* package) and coastlines (*mapdata* package) from the desired region and returns a ggplot that can be subsequently extended by further ggplot-layers.
 
 
-### Load world coastlines
+## Arguments
 
-The *mapdata* package allows to download world coastline polygon data. Unfortunately these are missing some 'small' islands (like Hiddensee).
-Haven't found a workaround for that yet...
+argument | description 
+---------|------------------------------------------------------------------------------
+lon.min, lon.max, lat.min, lat.max | Limits of the region to be plotted in decimal degrees
+bathy.breaks | either a numeric vector up to 9 unique cut points or a single number (up to 8) giving the number of intervals for the bathymetry plot
+land.colour, border.colour | valid name or number specifying a color (defaults are *NA* for land.color and "black" for border.color)
 
-```{r getCoastlines}
-baltic.coastlines <- map_data('worldHires', xlim = c(4, 29), ylim = c(50, 66))
+\newpage
 
-ggplot(baltic.coastlines) +
-  geom_polygon(aes(x=long, y=lat, group=group), colour = "red", fill = NA)
-```
+### Examples
 
-
-### Plot some maps
-
-... combine plot of bathymetry and coastlines in one function *plot.bathymetry()*
-
-#### The whole Baltic Sea:
-
-```{r Map_BalticSea}
-plot.bathymetry()
-```
-
-#### The southern part only:
-
-... with the bathymetry depth range of the whole Baltic Sea ...
-
-```{r Map_SouthernBalticSea}
+#### The Baltic Sea:
+... with manually defined bathymetry break points.
+```{r Map_BalticSea, fig.width=10, fig.height=8}
 plot.bathymetry(lon.min = 4, lon.max = 30,
-         lat.min = 53, lat.max = 67) +
-    coord_quickmap(xlim = c(10, 20), ylim = c(54, 58))
+                lat.min = 53, lat.max = 67,
+                bathy.breaks = c(seq(0, 50, length.out = 6),
+                                 seq(100, 300, length.out = 3),
+                                 +Inf))
 ```
 
-... or adapted to plot region.
+\newpage
 
-```{r Map_SouthernBalticSea_ownDepRange}
-plot.bathymetry(lon.min = 10, lon.max = 15, lat.min = 54, lat.max = 56)
+#### The southern Baltic Sea region:
+
+... with coloured dry land and additional plot layers.
+
+```{r Map_SouthernBalticSea_ownDepRange, fig.width=10, fig.height=5}
+plot.bathymetry(lon.min = 10, lon.max = 15, lat.min = 54, lat.max = 56, 
+                bathy.breaks = seq(0, 100, 10),
+                land.colour = "tan2") +
+    geom_line(data = data.frame(lat = c(54.2, 54.5, 54.8, 55, 55.5),
+                                 lon = c(11.5, 12, 13.1, 14.2, 14.8)),
+               mapping = aes(x = lon, y = lat),
+               color = "black", size = 3, linetype = "twodash") +
+    annotate(geom = "text", x = 13.7, y = 55, angle = 20,
+             label = "Arkona Basin")
 ```
 
-#### Should also work for any other region in the world
+\newpage
 
-```{r Map_randomRegion}
+To get a plot of the southern Baltic Sea while maintaining the range of the legend for the whole Baltic Sea (see above), plot range of the 'whole Baltic Sea plot' can be limited via 'coord_quickmap()':
+
+```{r Map_SouthernBalticSea, fig.width=10, fig.height=5}
+plot.bathymetry(lon.min = 4, lon.max = 30,
+         lat.min = 53, lat.max = 67,
+         bathy.breaks = c(seq(0, 50, length.out = 6),
+                                 seq(100, 300, length.out = 3),
+                                 +Inf),
+         land.colour = "black") +
+    coord_quickmap(xlim = c(10, 15), ylim = c(54, 56))
+```
+
+\newpage
+
+#### Works for any region in the world
+
+```{r Map_randomRegion, fig.width=10, fig.height=3}
 long <- 110
 lat <- 5
 
 plot.bathymetry(lon.min = long, lon.max = long +40, lat.min = lat, lat.max = lat + 15, 
          bathy.breaks = c(0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, +Inf),
-         land.colour = "grey20", border.colour = "pink")
+         land.colour = "grey20", border.colour = NA)
 ```
 
-Viola! Have fun ...
 
 ## Known issues / \#TODO:
 
@@ -95,3 +102,4 @@ Viola! Have fun ...
     + continuous vs. discrete
     + colour gradient selection
     + more convenient labeling / interval selection
+* option for (labeled) contour lines

@@ -6,4 +6,4 @@ required libraries:
  - mapdata and 
  - ggplot2
  
-see example.pdf for details
+see example.pdf for details, usage and known issues.
