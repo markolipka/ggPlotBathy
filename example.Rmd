@@ -18,10 +18,6 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, error = FAL
 source("ggPlotBathymetry.R")
 ```
 
-The  provides world wide high resolution bathymetry data.
-
-The  allows to download world coastline polygon data. 
-
 *plot.bathymetry()* fetches bathymetry data (*marmap* package) and coastlines (*mapdata* package) from the desired region and returns a ggplot that can be subsequently extended by further ggplot-layers.
 
 
@@ -57,7 +53,7 @@ plot.bathymetry(lon.min = 4, lon.max = 30,
 plot.bathymetry(lon.min = 10, lon.max = 15, lat.min = 54, lat.max = 56, 
                 bathy.breaks = seq(0, 100, 10),
                 land.colour = "tan2") +
-    geom_line(data = data.frame(lat = c(54.2, 54.5, 54.8, 55, 55.5),
+    geom_path(data = data.frame(lat = c(54.2, 54.5, 54.8, 55, 55.5),
                                  lon = c(11.5, 12, 13.1, 14.2, 14.8)),
                mapping = aes(x = lon, y = lat),
                color = "black", size = 3, linetype = "twodash") +
