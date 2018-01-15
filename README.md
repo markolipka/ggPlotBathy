@@ -1,5 +1,10 @@
-# Bathymetry mapping with ggplot in R
-Marko Lipka  
+---
+title: "Bathymetry mapping with ggplot in R"
+author: "Marko Lipka"
+output: 
+  html_document: 
+    keep_md: yes
+---
 
 
 
