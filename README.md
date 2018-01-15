@@ -28,7 +28,6 @@ lon.min, lon.max, lat.min, lat.max | Limits of the region to be plotted in decim
 bathy.breaks | either a numeric vector up to 9 unique cut points or a single number (up to 8) giving the number of intervals for the bathymetry plot
 land.colour, border.colour | valid name or number specifying a color (defaults are *NA* for land.color and "black" for border.color)
 
-\newpage
 
 ### Examples
 
@@ -49,7 +48,6 @@ plot.bathymetry(lon.min = 4, lon.max = 30,
 
 ![](README_files/figure-html/Map_BalticSea-1.png)<!-- -->
 
-\newpage
 
 #### The southern Baltic Sea region:
 
@@ -74,7 +72,6 @@ plot.bathymetry(lon.min = 10, lon.max = 15, lat.min = 54, lat.max = 56,
 
 ![](README_files/figure-html/Map_SouthernBalticSea_ownDepRange-1.png)<!-- -->
 
-\newpage
 
 To get a plot of the southern Baltic Sea while maintaining the range of the legend for the whole Baltic Sea (see above), plot range of the 'whole Baltic Sea plot' can be limited via 'coord_quickmap()':
 
@@ -95,7 +92,6 @@ plot.bathymetry(lon.min = 4, lon.max = 30,
 
 ![](README_files/figure-html/Map_SouthernBalticSea-1.png)<!-- -->
 
-\newpage
 
 #### Works for any region in the world
 
@@ -125,4 +121,4 @@ plot.bathymetry(lon.min = long, lon.max = long +40, lat.min = lat, lat.max = lat
     + continuous vs. discrete
     + colour gradient selection
     + more convenient labeling / interval selection
-* option for (labeled) contour lines
+* option for (labeled) contour lines (package 'directlabels' is no option, as the output must be a ggplot object so that layers can be added to the function output)
