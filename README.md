@@ -7,7 +7,9 @@ Marko Lipka
 Plot bathymetry maps from Long-Lat coordinates.
 
 required libraries:
-+ marmap, + mapdata and + ggplot2
++ marmap,
++ mapdata and
++ ggplot2
 
 ``` r
 source("ggPlotBathymetry.R")

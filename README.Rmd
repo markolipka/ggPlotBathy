@@ -15,9 +15,9 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, error = FAL
 Plot bathymetry maps from Long-Lat coordinates.
 
 required libraries:  
- + marmap,
- + mapdata and 
- + ggplot2
+  + marmap,  
+  + mapdata and  
+  + ggplot2
 
 ```{r getBathymetryData}
 source("ggPlotBathymetry.R")
