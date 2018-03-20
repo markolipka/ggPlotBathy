@@ -1,8 +1,12 @@
 library("marmap")
 library("mapdata")
 library("ggplot2")
-get.bathymetry <- function(lon1=4, lon2=30, lat1=53, lat2=67, bathy.breaks = 8){
-    bathymetry <- getNOAA.bathy(lon1=lon1, lon2=lon2, lat1=lat1, lat2=lat2, resolution=1, keep=TRUE) # keep = TRUE saves downloaded data as csv-File
+get.bathymetry <- function(lon1 = 4, lon2 = 30,
+                           lat1 = 53, lat2 = 67,
+                           bathy.breaks = 8, keep = TRUE){
+    bathymetry <- getNOAA.bathy(lon1 = lon1, lon2 = lon2,
+                                lat1 = lat1, lat2 = lat2,
+                                resolution = 1, keep = keep) # keep = TRUE saves downloaded data as csv-File
     fortyfied.bathy <- fortify(bathymetry) # make a df out of bathy so ggplot can fully use the data
     fortyfied.bathy <- subset(fortyfied.bathy, z <= 0) # limit to values below sea surface
     fortyfied.bathy$z <- -fortyfied.bathy$z # make depths positive values
@@ -25,10 +29,11 @@ plot.bathymetry <- function(lon.min = 4, lon.max = 30,
                      bathy.breaks = c(seq(0, 50, length.out = 6),
                                       seq(100, 300, length.out = 3),
                                       +Inf),
-                     land.colour = NA, border.colour = "black"){
+                     land.colour = NA, border.colour = "black",
+                     keep = TRUE){
     bathy <- get.bathymetry(lon1 = lon.min, lon2 = lon.max, 
                             lat1 = lat.min, lat2 = lat.max,
-                            bathy.breaks = bathy.breaks)
+                            bathy.breaks = bathy.breaks, keep = keep)
     coastlines <- map_data('worldHires', xlim = c(lon.min, lon.max), ylim = c(lat.min, lat.max))
     
     ggplot() +
