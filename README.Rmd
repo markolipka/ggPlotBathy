@@ -93,7 +93,7 @@ plot.bathymetry(lon.min = long, lon.max = long +40, lat.min = lat, lat.max = lat
 ## Known issues / \#TODO:
 
 * map_data even with *map = 'worldHires'* does not include all islands:
-    + is there another source for high resolution coastlines of the world?
+    + is there another source for high resolution coastlines of the world? **AW: YES, GADM available via getData("GADM", country = ISO3-code, level = 0) but worldwide download is trickier**
     + is the coastline necessary ?
 * would be nice to have some options for the colour scale of bathymetry
     + continuous vs. discrete
